@@ -22,7 +22,7 @@ userControllers.creatingUser = async (req, res) => {
     });
   }
   if (password.length < 4) {
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Password must have at least 6 characters",
       errorCode: 10003,
