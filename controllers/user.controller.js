@@ -40,10 +40,10 @@ userControllers.creatingUser = async (req, res) => {
     const newUser = new User({ name, username, password: hashedPassword, id });
 
     await newUser.save();
-    res.json({ success: true, message: "User registered successfully" });
+    res.status(200).json({ success: true, message: "User registered successfully" });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: "Error registering user" });
+    res.status(400).json({ success: false, message: "Error registering user" });
   }
 };
 
@@ -60,7 +60,7 @@ userControllers.loggingUser = async (req, res) => {
         errorCode: 10001,
       });
     }
-
+    bcrypt.compare(password, user.password)
     if (password === user.password) {
       res.json({
         ...user._doc,
