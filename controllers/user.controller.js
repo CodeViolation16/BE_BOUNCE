@@ -32,7 +32,7 @@ userControllers.creatingUser = async (req, res) => {
   const existingUser = await User.findOne({ username });
 
   if (existingUser) {
-    res.json({ success: false, message: "Username already exists" });
+    res.status(400).json({ success: false, message: "Username already exists" });
   }
   try {
     // Hash the password
