@@ -40,7 +40,14 @@ userControllers.creatingUser = async (req, res) => {
     const newUser = new User({ name, username, password: hashedPassword, id });
 
     await newUser.save();
-    res.status(200).json({ success: true, message: "User registered successfully" });
+    res.status(200).json(
+      {
+        success: true,
+        message: "User registered successfully",
+        username: newUser.name,
+        email: newUser.username,
+        id: newUser._id
+      });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: false, message: "Error registering user" });
@@ -51,8 +58,7 @@ userControllers.loggingUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username, password });
-
+    const user = await User.findOne({ username });
     if (!user) {
       return res.json({
         success: false,
@@ -60,13 +66,15 @@ userControllers.loggingUser = async (req, res) => {
         errorCode: 10001,
       });
     }
-    bcrypt.compare(password, user.password)
-    if (password === user.password) {
+    const result = await bcrypt.compare(password, user.password);
+    console.log(result, user.password, password)
+    if (result) {
       res.json({
         ...user._doc,
         success: true,
         message: "Login successful",
         username: user.name,
+        email: user.username,
         id: user._id,
       });
     } else {
@@ -103,8 +111,8 @@ userControllers.resetingUser = async (req, res) => {
 
 userControllers.updateNewPassword = async (req, res) => {
   const { username, password } = req.body;
-
-  await User.findOneAndUpdate({ username }, { password })
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  await User.findOneAndUpdate({ username }, { password: hashedPassword })
     .then((_) =>
       res.json({
         success: true,
