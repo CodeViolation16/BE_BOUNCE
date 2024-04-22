@@ -15,6 +15,7 @@ const {
   bookedCourt,
   deleteCourt,
 } = require("../controllers/court.controller");
+const loginRequired = require("../middleware/loginRequired");
 
 //USERS
 router.post("/", creatingUser);
@@ -26,6 +27,6 @@ router.put("/:userId/soft-delete", softDeleting);
 //COURT
 router.post("/booking", bookingCourt);
 router.get("/booked", bookedCourt);
-router.delete("/booking", deleteCourt);
+router.delete("/booking"  , deleteCourt);
 
 module.exports = router;
