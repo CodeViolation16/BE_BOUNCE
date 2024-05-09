@@ -2,6 +2,11 @@ var express = require("express");
 var router = express.Router();
 const User = require("../models/user");
 const Court = require("../models/court");
+const { validateToken } = require("../middleware/loginRequired");
+const {
+  postAnnoucement,
+  getAnnoucement,
+} = require("../controllers/court.controller");
 const {
   creatingUser,
   loggingUser,
@@ -27,6 +32,9 @@ router.put("/:userId/soft-delete", softDeleting);
 //COURT
 router.post("/booking", bookingCourt);
 router.get("/booked", bookedCourt);
-router.delete("/booking"  , deleteCourt);
+router.delete("/delete", deleteCourt);
+//Annoucement
+router.post("/send", postAnnoucement);
+router.get("/get", getAnnoucement);
 
 module.exports = router;

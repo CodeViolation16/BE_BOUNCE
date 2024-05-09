@@ -10,6 +10,7 @@ var usersRouter = require("./routes/users");
 const mongoose = require("mongoose");
 
 var app = express();
+app.use(cookieParser());
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());

@@ -4,7 +4,7 @@ const User = require("../models/user");
 const userControllers = {};
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-
+const { createTokens, validateToken } = require("../middleware/loginRequired");
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -32,7 +32,9 @@ userControllers.creatingUser = async (req, res) => {
   const existingUser = await User.findOne({ username });
 
   if (existingUser) {
-    res.json({ success: false, message: "Username already exists" });
+    res
+      .status(400)
+      .json({ success: false, message: "Username already exists" });
   }
   try {
     // Hash the password
@@ -40,14 +42,13 @@ userControllers.creatingUser = async (req, res) => {
     const newUser = new User({ name, username, password: hashedPassword, id });
 
     await newUser.save();
-    res.status(200).json(
-      {
-        success: true,
-        message: "User registered successfully",
-        username: newUser.name,
-        email: newUser.username,
-        id: newUser._id
-      });
+    res.status(200).json({
+      success: true,
+      message: "User registered successfully",
+      username: newUser.name,
+      email: newUser.username,
+      id: newUser._id,
+    });
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: false, message: "Error registering user" });
@@ -67,15 +68,19 @@ userControllers.loggingUser = async (req, res) => {
       });
     }
     const result = await bcrypt.compare(password, user.password);
-    console.log(result, user.password, password)
+    // console.log(result, user.password, password);
     if (result) {
+      // const accessToken = createTokens(user);
+      // res.cookie("access-token", accessToken, {
+      //   maxAge: 60 * 60 * 24 * 30 * 1000,
+      // });
       res.json({
-        ...user._doc,
         success: true,
         message: "Login successful",
         username: user.name,
         email: user.username,
         id: user._id,
+        role: user.role, // Include the user's role in the response
       });
     } else {
       res.json({ success: false, message: "Invalid username or password" });

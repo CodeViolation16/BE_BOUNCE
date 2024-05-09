@@ -1,28 +1,26 @@
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const { sign, verify } = require("jsonwebtoken");
 
-const loginRequired = (req, res, next) => {
+function createTokens(user) {
+  const accessToken = sign(
+    { username: user.username, id: user._id },
+    JWT_SECRET_KEY
+  );
+  return accessToken;
+}
+
+const validateToken = (req, res, next) => {
+  const accessToken = req.cookies["access_token"];
+  if (!accessToken) return res.status(400).json({ error: "Not Authenticated" });
   try {
-    const tokenString = req.headers.authorization;
-    if (!tokenString) throw new Error("Login required");
-
-    const token = tokenString.replace("Bearer ", "");
-
-    jwt.verify(token, JWT_SECRET_KEY, (err, payload) => {
-      if (err) {
-        if (err.name === "TokenExpiredError") {
-          throw new Error("Token Expired");
-        } else {
-          throw new Error("Token is invalid");
-        }
-      }
-
-      req.userId = payload._id;
-      next();
-    });
-  } catch (error) {
-    res.status(401).json({ error: error.message });
+    const validToken = verify(accessToken, JWT_SECRET_KEY);
+    if (valitToken) {  
+      req.authenticated = true;
+      return next();
+    }
+  } catch (err) {
+    return res.status(400).json({ error: err });
   }
 };
-
-module.exports = loginRequired;
+module.exports = { createTokens, validateToken };
