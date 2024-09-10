@@ -11,13 +11,11 @@ const mongoose = require("mongoose");
 
 var app = express();
 app.use(cookieParser());
-app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
-
+const allowedOrigins = ["https://bounce-rouge.vercel.app"];
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -43,6 +41,5 @@ async function connectToDatabase() {
 }
 
 connectToDatabase();
-const allowedOrigins = ["https://bounce-rouge.vercel.app/"];
 
 module.exports = app;
