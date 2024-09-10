@@ -3,6 +3,7 @@ const router = express.Router();
 const Court = require("../models/court");
 const Content = require("../models/content");
 const user = require("../models/user");
+
 const courtControllers = {};
 
 courtControllers.bookingCourt = async (req, res) => {
