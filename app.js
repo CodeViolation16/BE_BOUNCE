@@ -31,5 +31,18 @@ async function connectToDatabase() {
 }
 
 connectToDatabase();
+const allowedOrigins = ["https://bounce-rouge.vercel.app/"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 
 module.exports = app;
