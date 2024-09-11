@@ -15,7 +15,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-const allowedOrigins = ["https://bounce-rouge.vercel.app/login"];
+const allowedOrigins = ["https://bounce-rouge.vercel.app"];
 app.use(
   cors({
     origin: function (origin, callback) {
