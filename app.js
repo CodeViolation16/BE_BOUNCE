@@ -17,7 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 var corsOptions = {
-  origin: ["https://finalproject-yscx.onrender.com", "http://localhost:3000"],
+  origin: [
+    "https://finalproject-yscx.onrender.com",
+    "http://localhost:3000",
+    "https://bounce-rouge.vercel.app",
+  ],
   optionsSuccessStatus: 200,
 };
 
