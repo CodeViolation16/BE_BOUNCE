@@ -15,8 +15,13 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors());
 
+var corsOptions = {
+  origin: ["https://finalproject-yscx.onrender.com", "http://localhost:3000"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
@@ -30,5 +35,4 @@ async function connectToDatabase() {
 }
 
 connectToDatabase();
-
 module.exports = app;

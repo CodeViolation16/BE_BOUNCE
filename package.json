@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "deploy":"firebase deploy --only functions:api"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -12,6 +13,8 @@
     "debug": "~2.6.9",
     "dotenv": "^16.4.5",
     "express": "~4.16.1",
+    "firebase-admin": "^12.5.0",
+    "firebase-functions": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.0",
     "morgan": "~1.9.1",
